@@ -14,4 +14,140 @@ View
 
 1.2
 # setting.py 주요 사항
+장고는 setting.py을 통해 기본 사항을 자동 등록해준다. 추가적으로 필요한 사항은 원하는 내용을 등록하면 된다.
+
+· 데이터 베이스 설정 : 디폴트 SQLite3
+· 템플릿 항목 설정 : TEMPLATES 항목으로 지정
+· 정적 파일 항목 설정 : STATIC_URL 등 관련 항목 지정
+· 어플리케이션 등록 : 프로젝트에 포함되는 어플리케이션은 모두 설정 파일에 등록해야 한다.
+· 타임존 지정 : 최초는 UTC로 설정되어 있다. (세계표준시), 한국 시간으로 변경해야 한다.
+
+만일, SQLite3가 아닌 oracle, mysql로 변경하고 싶다면, setting.py에서 바꾸면 된다.
+또한, 루트 디렉터리를 포함한 각종 디렉터리의 위치, 로그의 형식, 디버그 모드, 보안 관련 사항들을 설정해주는 곳.
+
+1.4
+# models.py
+장고는 데이터베이스 처리를 ORM 기법을 통해 한다. 즉, 테이블을 클래스로 매핑하여 테이블에 대한
+CRUD(Create, Read, Update, Delete) 기능을 클래스 객체에 대해 수행하면, 장고가 내부적으로 데이터베이스에 반영.
+
+테이블을 클래스 하나로 정의하고, 테이블의 컬럼은 클래스의 변수로 매핑.
+테이블 클래스는 django.db.models.Model 클래스를 상속받아 정의, 클래스 변수의 타입도 장고에서
+미리 정의해 놓은 필드 클래스 사용.
+
+migration : 테이블 및 필드의 생성, 삭제, 변경과 같은 변경 사항을 알려주는 정보.
+-> makemigrations 및 migrate 명령을 제공.
+
+1.5 
+# URLconfig
+URL과 뷰(함수 또는 메소드)를 매핑해 주는 urls.py 파일
+추천 되는 방법은 두 개의 URLconf를 사용하여, 하나는 전체 URL을 정의하고, 하나는 앱마다 정의하는 앱URL로 사용하는 것을 추천.
+확장이 용이해지기 때문, URLconfig에 네임 공간을 지정할 수도 있고, reverse() 함수나 {% url %} 탬플릿 태그를 통해
+소스에 URL을 하드 코딩하지 않아도 필요한 URL을 추출할 수 있는 기능.
+
+1.6
+# views.py
+뷰 로직을 코딩하는 파일.
+함수로 코딩할 것인지, 클래스로 코딩할 것인지에 따라 함수형 뷰, 클래스형 뷰로 구분
+클래스 형에 대해 사용을 하게 되면, 제네릭 뷰를 사용할 수 있고 재활용 및 확장성에서 유리 -> 클래스형이 좋다!
+
+1.7
+# templates 주요 사항
+웹 화면 별로 템블릿 파일(*.html)이 필요하여, 여러 템플릿을 작성하게 되고, 이런 파일들을 모아두기 위한 템플릿 디렉터리가 필요.
+프로젝트 템플릿 디렉터리와 앱 템플릿 디렉터리로 분류,
+프로젝트 템플릿 디렉터리는 TEMPLATES 설정의 DIRS에 항목에 지정된 디렉터리.
+앱 템플릿 디렉터리는 각 어플리케이션 디렉터리마다 존재하는 templates/ 디렉터리를 말한다.
+
+프로젝트 템플릿 디렉터리에는 base.html 등 전체 프로젝트의 Look and feel에 관련된 파일들을 모아두고, 각 앱에서 사용하는
+템플릿 파일들은 각 앱마다의 templates에 저장.
+
+템플릿 파일을 장고에서 찾는 순서 : 프로젝트 템플릿 디렉터리 -> 앱 템플릿 디렉터리, 앱 순서는 INSTALED_APPS 설정 항목에 등록된
+순서대로 진행.
+
+1.8
+# Admin 사이트
+테이블의 내용을 열람하고 수정하는 기능 제공.
+Admin 사이트에 원하는 테이블을 등록하기 위해서 admin.py에 작업하면 된다.
+
+1.9
+# 개발용 웹 서버 - runserver
+개발 과정에서 현재의 웹을 실행할 수 있도록 runserver라는 테스트용 웹 서버를 제공.
+테스트를 위해선 runserver도 충분하지만, 상용화 하여 다른 사람이 사용할 땐 apache 등의 웹 서버를 사용해야 함 <- 보약에 취약하기 때문에 
+
+2.1.3
+# 화면 UI 설계
+# 테이블 설계
+# 로직 설계 
+웹 프로그래밍은 URL을 받아서, 최종 HTML 템플릿 파일을 만드는 과정이 하나의 로직이 된다.
+이 과정에서 redirection이 일어날 수도 있고, 템플릿 파일에서 URL 요청이 일어날 수도 있다.
+# URL 설계
+urls.py 파일에 코딩,
+Bookmark/22 -> 22는 기본적으로 테이블 레코드의 키값이 채워지는 자리.
+
+2.2 
+# 뼈대 만들기
+프로젝트에 대한 디렉터리 및 파일 구성, 설정 파일 세팅, 테이블 생성, 슈퍼 유저 생성, 프로젝트가 만들어 지면
+그 하위에 어플리케이션 디렉터리 및 파일을 구성, 장고는 이러한 작업을 위해 쉘 커맨드 제공
+
+# 프로젝트 생성
+django-admin startproject [name]
+
+# 프로젝트 설정 파일 변경
+DATABASE, 
+TEMPLATE의 'DIRS':[] -> 프로젝트 템플릿의 위치,
+STATIC, STATICFILES_DIRS 항목은 프로젝트 정적 파일이 위치한 디렉터리를 의미하고, 수동으로 직접 지정한다. 
+STATIC을 찾을 때에도, 앱의 static/보다, STATICFILES_DIRS을 먼저 탐색한다.
+TIMEZONE, 한국 시간으로 변경하자, 기본은 표준시다. TIME_ZONE = 'Asia/Seoul'
+미디어 관련 사항, MEDIA_URL = '/media/', MEDIA_ROOT = os.path.join(BASE_DIR, 'media'); 파일 업로드 기능을 개발할 때 필요한
+설정이다.
+개발하고 있는 어플리케이션을 설정 파일에 등록해야 한다.(setting.py) INSTALLED_APPS 항목에 설정하면 된다.
+
+# 기본 테이블 생성
+테이블에 대한 변경 사항이 있을 때 python manage.py migrate 사용,
+테이블을 만들지도 않았는데 python manage.py migrate를 사용하는 이유 -> 사용자 및 권한 그룹 테이블을 만들어 주기 위해서 실행하는 것.
+migrate를 하게 되면, 데이터베이스의 사항을 장고에 알려주기 때문에 db.sqlite3가 생성된다.
+
+# 슈퍼유저 생성
+python manage.py createsuperuser
+
+# 앱 생성
+북마크 앱을 만들기 위해서 python manage.py startapp bookmark
+
+# apps.py
+어플리케이션의 설정 클래스를 정의하는 파일
+
+# 앱 등록
+앱을 생성했으면 앱을 등록해야겠지? 즉, 프로젝트에 포함되는 애플리케이션은 모두 설정 파일에 저장되어야 한다. settings.py에 등록을 해야 한다.
+등록 시에, 간단하게 앱의 이름만 해도 되지만, 클래스로 등록하는 것이 좀 더 명확한 방법이다.
+bookmark.apps.BookmarkConfig를 settings.py에 등록한다. // INSTALLED_APPS에!
+BookmarkConfig가 apps.py에 있다. apps.py에는 이름, 레이블, 별칭, 경로를 설정할 수 있는데 이름은 필수로 사용되어야 한다. 
+설정 클래스는 해당 어플리케이션에 대한 메타 정보를 저장하기 위한 클래스로, django.apps.Appconfig를 상속받아 작성한다.
+
+2.3 
+# 모델 
+CharFeild, 
+URLField, URLField('url')에서 url 문구는 url 컬럼에 대한 레이블 문구, 즉, 필드의 별칭이다.
+
+__str__(self):을 사용하는 이유는 객체를 문자열로 표현하기 위해서 사용하는 메소드, 파이썬 버전 2.x 버전에서는 __Unicode()__를 사용하지만,
+장고에서는 파이썬 3.x 버전으로 코딩하여 2.x 버전은 자동으로 변환해 주기 때문에 문제가 없다.
+
+# admin 사이트에 반영
+테이블을 생성한 후, Admin 사이트에 등록하기 위해, admin.py에 추가를 한다.
+
+-- admin.py --
+class BookmarkAdmin(admin.ModelAdmin): // Bookmark 클래스가 admin 사이트에서 어떻게 보여질지 정의하는 클래스
+	list_display = ('title', 'url') -> 즉, Bookmark 내용을 보여줄 때, title과 url을 화면에 출력하라!
+
+admin.site.register(bookmark, BookmarkAdmin) // 등록~!
+
+즉, 테이블을 새로 만들 때는 models.py와 admin.py를 함께 수정해야 한다.
+
+# 테이블 변경 사항 반영
+python manage.py makemigrations 
+python manage.py migrate
+각 앱 디렉터리 별로 migration 정보가 존재하고, 즉, makemigrations을 통해 bookmark/migrations 디렉터리 하위에 마이그레이션 파일들이 생기고
+이 마위그레이션 파일들을 이용해 migrate 명령으로 데이터베이스에 테이블을 만들어 준다.
+
+# 테이블 모습 확인하기
+python manage.py runserver 0.0.0.0:8000
+
 
