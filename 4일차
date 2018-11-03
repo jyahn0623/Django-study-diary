@@ -1,0 +1,31 @@
+
+
+1. 
+path('<int:pk>', views.sayGoodbye, name='goodbye'),
+ 
+def sayGoodbye(request, pk):
+    return HttpResponse("prac2입니다." + str(pk))
+    
+위의 실행 구문에서 알 수 있는 것은 해당 URL로 접속이 된다면 pk의 값을 views의 sayGoodbye()에 전달을 한다.
+이때, pk의 이름은 마음대로 명명할 수 있다. '<int:n>'이라고 한다면, def sayGoodbye(request, n)으로 일치시킨다.
+
+2.
+def sayGoodbye(request, pk):
+    a = request.POST
+    return render(request, 'prac1/hello.html', {'num' : pk })
+    
+return HttpRequest가 가장 많이 사용되는 구문이기 때문에 장고에서는 shortcuts을 제공한다.
+from django.shortcuts import render을 사용해야 한다. for using shortcuts
+return render(request, 'prac1/hello.html', {'num' : pk }) 
+-> 요청이 온다면 prac1의 hello.html의 template를 실행하고, 이때 넘겨주는 값은 num이라는 변수를 넘기며
+이 num의 값은 해당 view의 pk가 된다.
+
+
+def sayGoodbye(request, pk, name):
+    a = request.POST
+    return render(request, 'prac1/hello.html', {'num' : pk, 'name' : name })
+    
+path('<int:pk>/<name>', views.sayGoodbye, name='goodbye'),
+localhost:prac1/20/안주영이라는 URL이 접속 된다면, name이라는 변수에 안주영이 저장 되고,
+뷰에 있는 sayGoodbye() 함수가 호출이 되면서 해당 값들이 위와 동일하게 템플릿에 전달된다.
+
